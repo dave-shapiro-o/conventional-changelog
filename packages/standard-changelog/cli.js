@@ -6,6 +6,7 @@ const standardChangelog = require('./')
 const fs = require('fs')
 const meow = require('meow')
 const tempfile = require('tempfile')
+const _ = require('lodash')
 const resolve = require('path').resolve
 const Readable = require('stream').Readable
 const rimraf = require('rimraf')
@@ -99,7 +100,7 @@ const append = flags.append
 const releaseCount = flags.firstRelease ? 0 : flags.releaseCount
 const mergeCommitFilter = flags.mergeCommitFilter || 'exclude'
 
-const options = {
+const options = _.omitBy({
   preset: flags.preset,
   pkg: {
     path: flags.pkg
@@ -108,7 +109,7 @@ const options = {
   releaseCount: releaseCount,
   mergeCommitFilter: mergeCommitFilter,
   lernaPackage: flags.lernaPackage
-}
+}, _.isUndefined)
 
 if (flags.verbose) {
   options.warn = console.warn.bind(console)
