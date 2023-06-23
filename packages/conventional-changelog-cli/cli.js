@@ -6,6 +6,7 @@ const conventionalChangelog = require('conventional-changelog')
 const fs = require('fs')
 const meow = require('meow')
 const tempfile = require('tempfile')
+const _ = require('lodash')
 const resolve = require('path').resolve
 
 const cli = meow(`
@@ -142,7 +143,7 @@ if (infile && infile === outfile) {
   }
 }
 
-let options = {
+let options = _.omitBy({
   preset: flags.preset,
   pkg: {
     path: flags.pkg
@@ -154,7 +155,7 @@ let options = {
   outputUnreleased: flags.outputUnreleased,
   lernaPackage: flags.lernaPackage,
   tagPrefix: flags.tagPrefix
-}
+}, _.isUndefined)
 
 if (flags.verbose) {
   options.debug = console.info.bind(console)
@@ -173,17 +174,7 @@ try {
   if (flags.config) {
     config = require(resolve(process.cwd(), flags.config))
     options.config = config
-
-    if (config.options) {
-      options = {
-        ...options,
-        ...config.options,
-        pkg: {
-          ...options.pkg,
-          ...config.options.pkg
-        }
-      }
-    }
+    options = _.merge(options, config.options)
   } else {
     config = {}
   }
