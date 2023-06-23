@@ -133,6 +133,7 @@ const skipUnstable = flags.skipUnstable
 const mergeCommitFilter = flags.mergeCommitFilter || 'exclude'
 
 if (infile && infile === outfile) {
+  console.log('test')
   sameFile = true
 } else if (sameFile) {
   if (infile) {
